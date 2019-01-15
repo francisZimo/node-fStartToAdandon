@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>node撸接口</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<div class="box" >
+    <a class="addBtn" href="add.html">增加新用户</a>
+    <h2 class="head">
+        <span>编号</span>
+        <span>姓名</span>
+        <span>年龄</span>
+        <span>地址</span>
+        <span>操作</span>
+    </h2>
+    <ul class="list" id="list">
+
+    </ul>
+
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    //获取客户信息，完成页面的数据绑定
+    var customeModule=(function(){
+        //Bind html
+        var documentList=document.getElementById('list');
+        function bindHtml(data){
+            var str='';
+            for (var i = 0; i < data.length; i++) {
+                var curData=data[i];
+                str+=`<li>
+                        <span>${curData.id}</span>
+                        <span>${curData.name}</span>
+                        <span>${curData.age}</span>
+                        <span>${curData.address}</span>
+                        <span>
+                            <a href="add.html?id=${curData.id}">修改</a>
+                            <a href="javascript:;" cusId="${curData.id}">删除</a>
+                        </span>
+                     </li>`
+            }
+            documentList.innerHTML=str;
+        }
+        function removeCustomer(){
+            documentList.onclick=function(e){
+                var e=e||window.event,
+                     tar= e.target|| e.srcElement,
+                        tarTag=tar.tagName.toUpperCase();
+                //删除操作
+                if(tarTag==='A'&&tar.innerHTML==='删除'){
+                //确认提示框
+                    var customId=tar.getAttribute('cusId'),
+                            flag=window.confirm('确定要删除编号为['+customId+']的客户吗?');
+                    if(flag){
+                        $.ajax({
+                            url:'/removeInfo?id='+customId,
+                            success:function(data){
+                                if(data&&data.code==0){
+                                    documentList.removeChild(tar.parentNode.parentNode);
+                                    return;
+                                }
+                                alert(data.msg);
+                            }
+                        })
+                    }
+
+                }
+            }
+        }
+        //send ajax get data
+        function init(){
+            $.ajax({
+                url:'/getList',
+                success:function(data){
+                    console.log(data);
+                   if(data&&data.code==0){
+                       var data=data['data'];
+                       //绑定数据
+                       bindHtml(data);
+                       //取消
+                       removeCustomer();
+                   }
+                }
+            })
+        }
+        return{
+            init:init
+        }
+
+    })();
+    customeModule.init();
+
+
+</script>
+</body>
+</html>

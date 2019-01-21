@@ -85,8 +85,8 @@
     var userAddress=document.getElementById('userAddress');
     var submit=document.getElementById('submit');
     //判断修改还是增加：如果url后面传递了ID值就是修改，否则就是增加
-    var urlBoj= window.location.href.queryUrlParameter(),
-            customId=urlBoj['id'],
+    var urlObj= window.location.href.queryUrlParameter(),
+            customId=urlObj['id'],
             isFlag=typeof customId==='undefined'?false:true; //true->修改 false->增加
     //如果是修改，首先需要把对应客户的信息获取到，并且增加到对应的文本框中。
     if(isFlag){

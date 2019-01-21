@@ -21,15 +21,19 @@ var server=http.createServer(function(req,res){
         try{
             let conFile=fs.readFileSync('.'+pathname,'utf-8');
             res.writeHead(200,{'content-type':suffixMIME+';charset=utf-8;'})
-            res.end(conFile)
+            res.end(conFile);
+            return;
         }catch(e){
             res.writeHead(404,{'content-type':'text/plain;charset=utf-8;'})
             res.end('file is not found');
             return;
         }
     }
+    //跨域
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     //API数据接口的请求
-    //1.获取所有的客户信息
     var con=null,
         result=null,
         customId=null,
@@ -38,6 +42,7 @@ var server=http.createServer(function(req,res){
     con=fs.readFileSync(customPath,'utf-8');
     con.length===0?con='[]':null;//为了防止我们custom.json中什么也没有，con也是一个空字符串，我们会使用JSON.parse转换的时候会报错
     con=JSON.parse(con);
+    //1.获取所有的客户信息
     if(pathname==='/getList'){
         //开始按照API文章的规范给客户端返回的数据
         result={

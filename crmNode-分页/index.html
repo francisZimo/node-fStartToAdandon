@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>node撸接口</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+<div class="box" >
+    <h2 class="head">
+        <span>编号</span>
+        <span>姓名</span>
+        <span>年龄</span>
+        <span>分数</span>
+    </h2>
+    <ul class="list" id="list">
+
+    </ul>
+    <div class="page">
+        <span class="quickOperation">First</span>
+        <span class="quickOperation">Prev</span>
+        <ul class="pageNum">
+            <li class="pageItem">1</li>
+            <li class="pageItem">2</li>
+            <li class="pageItem">3</li>
+            <li class="pageItem">4</li>
+            <li class="pageItem">5</li>
+            <li class="pageItem">6</li>
+            <li class="pageItem">7</li>
+            <li class="pageItem">8</li>
+            <li class="pageItem">9</li>
+            <li class="pageItem">10</li>
+        </ul>
+        <span class="quickOperation">Next</span>
+        <span class="quickOperation">Last</span>
+    </div>
+
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    //获取客户信息，完成页面的数据绑定
+    var customeModule=(function(){
+        //Bind html
+        var documentList=document.getElementById('list');
+        var pageItems=document.getElementsByClassName('pageNum')[0];
+        var pageBtn=document.getElementsByClassName('page')[0];
+        var oldPageNum=1;
+        function bindHtml(data){
+            documentList.innerHTML='';
+            var str='';
+            for (var i = 0; i < data.length; i++) {
+                data[i].sex=data[i].sex===0?'男':'女';
+                var curData=data[i];
+                str+=`<li>
+                        <a href="detail.html?id=${+curData.id}">
+                            <span>${curData.id}</span>
+                            <span>${curData.name}</span>
+                            <span>${curData.sex}</span>
+                            <span>${curData.score}</span>
+                        </a>
+                     </li>`
+            }
+            documentList.innerHTML=str;
+        }
+        function removeCustomer(){
+            documentList.onclick=function(e){
+                var e=e||window.event,
+                     tar= e.target|| e.srcElement,
+                        tarTag=tar.tagName.toUpperCase();
+                //删除操作
+                if(tarTag==='A'&&tar.innerHTML==='删除'){
+                //确认提示框
+                    var customId=tar.getAttribute('cusId'),
+                            flag=window.confirm('确定要删除编号为['+customId+']的客户吗?');
+                    if(flag){
+                        $.ajax({
+                            url:'/removeInfo?id='+customId,
+                            success:function(data){
+                                if(data&&data.code==0){
+                                    documentList.removeChild(tar.parentNode.parentNode);
+                                    return;
+                                }
+                                alert(data.msg);
+                            }
+                        })
+                    }
+
+                }
+            }
+        }
+        function pagination(){
+            pageItems.onclick=function(e){
+                e=e||window.event;
+                var tar= e.target|| e.srcElement;
+                var tarTag=tar.tagName.toUpperCase();
+                if(tarTag==='LI'&&tar.className==='pageItem'){
+                    var pageNum=parseInt(tar.innerText);
+                    oldPageNum=pageNum;
+                    $.ajax({
+                        url:'/getList?n='+pageNum,
+                        success:function(data){
+                            if(data&&data.code==0){
+                                var data=data['data'];
+                                //绑定数据
+                                bindHtml(data);
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        function personInfo(){
+            documentList.on('click',function(e){
+                e=e||event;
+                var tar= e.target|| e.srcElement;
+                var tarTag=tar.tagName.toUpperCase();
+                if(tarTag==='LI'){
+
+                }
+            })
+        }
+        function forthBack(){
+            pageBtn.onclick=function(e){
+                e=e||window.event;
+                var tar= e.target|| e.srcElement;
+                var tarTag=tar.tagName.toUpperCase();
+                var newPageNum=1;
+                if(tarTag==='SPAN'&&tar.className==='quickOperation'){
+                    var btnOption=tar.innerText.toUpperCase();
+                    switch (btnOption){
+                        case 'FIRST':
+                            newPageNum=1;  break;
+                        case 'LAST':
+                            newPageNum=9;break;
+                        case 'PREV':
+                            newPageNum=oldPageNum-1<1?1:oldPageNum-1;
+                            break;
+                        case 'NEXT':
+                            newPageNum=oldPageNum+1>10?10:oldPageNum+1;
+                            break;
+                    }
+                    oldPageNum=newPageNum;
+                    $.ajax({
+                        url:'/getList?n='+newPageNum,
+                        success:function(data){
+                            if(data&&data.code==0){
+                                var data=data['data'];
+                                //绑定数据
+                                bindHtml(data);
+                            }
+                        }
+                    })
+                }
+            }
+
+        }
+
+        //send ajax get data
+        function init(){
+            $.ajax({
+                url:'/getList?n='+oldPageNum,
+                success:function(data){
+                    console.log(data);
+                   if(data&&data.code==0){
+                       var data=data['data'];
+                       //绑定数据
+                       bindHtml(data);
+                       //取消
+                       removeCustomer();
+                       //分页
+                       pagination();
+                       forthBack();
+                   }
+                }
+            })
+        }
+        return{
+            init:init
+        }
+    })();
+    customeModule.init();
+
+
+</script>
+</body>
+</html>

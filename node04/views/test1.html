@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var p1=new Promise(function(resolve,reject){
+        reject(Promise.reject('reject')) //
+    })
+    var p2=new Promise(function(resolve,reject){
+        // reject(Promise.reject('reject'))
+        resolve('我是2')
+    })
+    var p3=new Promise(function(resolve,reject){
+        reject(Promise.resolve('resolve'))
+    })
+    p1.then(
+        function fulfilled(value){
+            console.log('fulfilled11' + value);
+        },
+        function rejected(err){
+            console.log('rejected11' + err);
+        }
+    )
+    p2.then(
+        function fulfilled(value){
+            console.log('fulfilled22' + value);
+        },
+        function rejected(err){
+            console.log('rejected22' + err);
+        }
+    )
+    p3.then(
+        function fulfilled(value){
+            console.log('fulfilled33' + value);
+        },
+        function rejected(err){
+            console.log('rejected33' + err);
+        }
+    )
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    //jsonp必须是全局的
+    //script
+    function b(data){
+        console.log(data);
+    }
+
+    let oScript=document.createElement('script');
+    oScript.src='http://localhost:3002/jsonp?cb=b';
+    document.body.appendChild(oScript);
+
+    let xml=new XMLHttpRequest();
+    xml.open('put','http://localhost:3002/clock',true);
+    xml.onload=function(){
+        console.log(xml.response)
+    }
+    xml.send('123');
+</script>
+</body>
+</html>

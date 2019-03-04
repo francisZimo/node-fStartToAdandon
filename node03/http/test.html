@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body,html{
+            background-color: #179a6e;
+        }
+    </style>
+
+</head>
+<body>
+<div id="clock">
+
+</div>
+<script>
+    //跨域： 协议 端口号 域名
+    // let xhr=new XMLHttpRequest();
+    // xhr.open('get','/clock',true);
+    // xhr.onload=function(){
+    //     if(this.status=200){
+    //         clock.innerHTML=xhr.response;
+    //     }
+    // }
+    // xhr.send()
+    //fetch 基于promise的
+
+    fetch('/clock',{
+        method:'get',
+    }).then(function(res){
+        // console.log(res.text());
+        // console.log(res.text); //转换成想要的结果JSON.parse();
+        // return res.text();
+        return res.json();
+    }).then((data)=>{
+        // console.log(data);
+        clock.innerHTML=data.time;
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .imgitem{
+            display: block;
+            margin:0 auto;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <button onclick="add()">新增</button>
+</div>
+<ul id="itemWrap" style="border:1px solid red;">
+    <!--<li><span></span><span class="del">删除</span></li>-->
+</ul>
+<div>
+    <button onclick="add1()">新增</button>
+</div>
+<ul id="itemWrap1" style="border:1px solid blue;">
+
+</ul>
+
+<script>
+    var itemWra=document.getElementById('itemWrap');
+    let add=function(){
+        var num=parseInt(Math.random()*50) ;
+        var li=document.createElement('li');
+        li.innerHTML=`<span>${num}</span><span class="del">删除</span>`;
+        itemWra.appendChild(li);
+    }
+    itemWra.onclick=function(e){
+        e=e||window.event;
+        var tar=e.target||e.srcElement,
+            tarTag=tar.tagName.toUpperCase();
+        if(tarTag==='SPAN'&&tar.innerHTML==='删除'){
+            itemWra.removeChild(tar.parentNode)
+        }
+    }
+    var itemWrap1=document.getElementById('itemWrap1');
+    let add1=function(){
+        var num=parseInt(Math.random()*50) ;
+        var li=document.createElement('li');
+        // var span1=document.createElement('span')
+        // span1.innerText=num;
+        // var del=document.createElement('span')
+        // del.innerText='删除'
+        // del.setAttribute('onclick','del(this)');
+        // li.appendChild(span1)
+        // li.appendChild(del)
+        li.innerHTML=`<span>${num}</span><span onclick="del(this)">删除</span>`
+        itemWrap1.appendChild(li);
+    }
+    function del(obj){
+        itemWrap1.removeChild(obj.parentNode)
+    }
+//    function b(){
+//        console.log(a)
+//        var a=10;
+//        function a(){}
+//        a=100
+//        console.log(a)
+//    }
+//    b();
+//    var num=10;
+//    var obj={
+//        num:8,
+//        inner:{
+//            num:6,
+//            print:function(){
+//                console.log('num:'+num+', this.num'+this.num)
+//            }
+//        }
+//    }
+//    num=888;
+//    obj.inner.print();
+//    var fn=obj.inner.print;
+//    fn();
+//(obj.inner.print)()
+//(obj.inner.print=obj.inner.print)()
+//(function(){
+//    console.log('test');})()
+//var s=function(){console.log('test')}
+//function Parent
+//let a = {
+//    valueOf() {
+//        return 0;
+//    },
+//    toString() {
+//        return '1';
+//    }
+//
+//}
+//    function Parent(){
+//        this.a='1'
+//    }
+//    Parent.prototype.say=function(){
+//        console.log('hello');
+//    }
+//    var child=new Parent();
+//function create() {
+//    console.log(arguments);
+//    // 创建一个空的对象
+//    let obj = new Object()
+//    // 获得构造函数
+//    let Con = [].shift.call(arguments)
+//    // 链接到原型
+//    obj.__proto__ = Con.prototype
+//    // 绑定 this，执行构造函数
+//    let result = Con.apply(obj, arguments)
+//    // 确保 new 出来的是个对象
+//    return typeof result === 'object' ? result : obj
+//}
+//function Parent(a){
+//    console.log('小')
+//    this.s=a;
+//}
+//var obj=create(Parent(1))
+//function Parent(){
+//    console.log('父级')
+//}
+//var child=new Parent();
+//var A = function() {}
+//A.prototype = {}
+//var a = new A();
+////A.prototype = {}
+////var b = new A()
+//console.log(a instanceof A)
+//     function myNew(parent){
+//         var obj={};
+//         obj.__proto__=parent.prototype;
+//         var result=parent.call(obj);
+//         return typeof result==='object'?result:obj;
+//     }
+//     function Parent(){
+//         this.a=10;
+//         return {name:'aaa'}
+//     }
+//     Parent.prototype.say=function(){console.log('lalal')}
+// parent.b=65
+// var child=myNew(Parent);
+//
+// console.dir(child);
+
+
+</script>
+</body>
+</html>
